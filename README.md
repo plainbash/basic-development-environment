@@ -10,7 +10,7 @@ This container must only be published to host.
 
 docker run --publish 127.0.0.1:2222:22
 
-docker run -d -p 2222:22 --mount type=bind,source={source_path},target=/home/plainbash/{directory}/ --name dev dev 
+docker run -d --publish  127.0.0.1:2222:22 --mount type=bind,source={source_path},target=/home/plainbash/{directory}/ --name dev dev 
 
 ### SSH
 ssh -p 2222 plainbash@127.0.0.1
