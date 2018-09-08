@@ -1,0 +1,9 @@
+version: '3'
+services:
+        core:
+                build: .
+                container_name: dev
+                ports:
+                        - "127.0.0.1:2233:22"
+                volumes:
+                        - C:\Users\hangu\:/home/plainbash/windows/
