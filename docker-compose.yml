@@ -6,4 +6,4 @@ services:
                 ports:
                         - "127.0.0.1:2233:22"
                 volumes:
-                        - C:\Users\hangu\:/home/plainbash/windows/
+                        - <source_folder>:/home/plainbash/windows/
