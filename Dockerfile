@@ -31,6 +31,6 @@ RUN echo "Europe/Helsinki" > /etc/timezone && \
 
 RUN chown -R plainbash:plainbash /home/plainbash
 
-COPY entrypoint.sh /root/entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
-CMD ["/root/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
