@@ -2,6 +2,9 @@
 
 Dev environment 
 
+### Configure SSH keys
+Create folder name keys, and put public keys inside that folder.
+
 ### Configure mintty when using wsltty
 Copy mintty director to /mnt/c/<user_name>/AppData
 

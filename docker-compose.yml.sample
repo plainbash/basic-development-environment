@@ -7,3 +7,4 @@ services:
                         - "127.0.0.1:2233:22"
                 volumes:
                         - <source_folder>:/home/plainbash/windows/
+                        - <source_folder>:/home/plainbash/.ssh/

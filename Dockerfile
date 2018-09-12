@@ -15,7 +15,7 @@ COPY configurations/.gitconfig /home/plainbash/.gitconfig
 COPY configurations/.tmux.conf /home/plainbash/.tmux.conf
 
 # The secrets directory must be manually created
-COPY secrets/authorized_keys /home/plainbash/.ssh/authorized_keys
+#COPY secrets/authorized_keys /home/plainbash/.ssh/authorized_keys
 
 # Use this for debuging
 # It is probably ok if the SSH key is protected by passphrase
@@ -31,4 +31,6 @@ RUN echo "Europe/Helsinki" > /etc/timezone && \
 
 RUN chown -R plainbash:plainbash /home/plainbash
 
-CMD ["/usr/sbin/sshd", "-D"]
+COPY entrypoint.sh /root/entrypoint.sh
+
+CMD ["/root/entrypoint.sh"]
