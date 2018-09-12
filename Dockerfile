@@ -29,7 +29,7 @@ RUN echo "Europe/Helsinki" > /etc/timezone && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_GB.UTF-8
 
-RUN chown -R plainbash:plainbash /home/plainbash
+RUN mkdir /home/plainbash/.ssh && chown -R plainbash:plainbash /home/plainbash
 
 COPY entrypoint.sh /entrypoint.sh
 

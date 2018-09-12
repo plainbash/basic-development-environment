@@ -6,8 +6,8 @@ user=plainbash
 uid="$(id -u $user)"
 
 # Add SSH keys to authorized_keys with valid permissions
-if [ -d /home/$user/.ssh/keys ]; then
-	for publickey in /home/$user/.ssh/keys/*; do
+if [ -d /home/$user/ssh_keys ]; then
+	for publickey in /home/$user/ssh_keys/*; do
 		cat $publickey >> /home/$user/.ssh/authorized_keys
 	done
 	chown $uid /home/$user/.ssh/authorized_keys
