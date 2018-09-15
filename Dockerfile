@@ -2,17 +2,19 @@ FROM debian:9.5
 
 RUN apt-get update && \
 	apt-get dist-upgrade -y && \
-	apt-get install -y git tmux vim dos2unix ssh  openssh-server locales
+	apt-get install -y git tmux vim dos2unix ssh openssh-server locales
 
-RUN useradd -ms /bin/bash -u 1001 plainbash  
+ARG user
+
+RUN useradd -ms /bin/bash -u 1001 $user  
 
 RUN mkdir /var/run/sshd && chmod 0750 /var/run/sshd
 
-COPY configurations/.dircolors /home/plainbash/.dircolors
+COPY configurations/.dircolors /home/$user/.dircolors
 
-COPY configurations/.gitconfig /home/plainbash/.gitconfig
+COPY configurations/.gitconfig /home/$user/.gitconfig
 
-COPY configurations/.tmux.conf /home/plainbash/.tmux.conf
+COPY configurations/.tmux.conf /home/$user/.tmux.conf
 
 # The secrets directory must be manually created
 #COPY secrets/authorized_keys /home/plainbash/.ssh/authorized_keys
@@ -29,7 +31,21 @@ RUN echo "Europe/Helsinki" > /etc/timezone && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_GB.UTF-8
 
-RUN mkdir /home/plainbash/.ssh && chown -R plainbash:plainbash /home/plainbash
+# Install and clean up build packages
+RUN build_dependencies="curl unzip gettext pkg-config libtool-bin automake cmake build-essential" && \
+    apt-get update && apt-get install -y $build_dependencies && \ 
+    git clone https://github.com/neovim/neovim.git && \
+    cd neovim && git checkout tags/v0.3.1 -b 0.3.1 && \
+    make CMAKE_BUILD_TYPE=Release && \
+    make install && \
+    make clean && cd .. && rm -rf neovim && \
+    apt-get remove -y $build_dependences && apt-get -y autoremove && apt-get -y autoclean
+
+# fzf finder
+RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/$user/.fzf && \
+    /home/$user/.fzf/install
+
+RUN mkdir /home/$user/.ssh && chown -R $user:$user /home/$user
 
 COPY entrypoint.sh /entrypoint.sh
 
