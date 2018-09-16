@@ -8,16 +8,14 @@ ARG user
 
 RUN useradd -ms /bin/bash -u 1001 $user  
 
-RUN mkdir /var/run/sshd && chmod 0750 /var/run/sshd
+RUN mkdir /var/run/sshd && chmod 0750 /var/run/sshd && \
+    printf 'TCPKeepAlive yes\nServerAliveInterval 30' >> /home/$user/.ssh/config
 
 COPY configurations/.dircolors /home/$user/.dircolors
 
 COPY configurations/.gitconfig /home/$user/.gitconfig
 
 COPY configurations/.tmux.conf /home/$user/.tmux.conf
-
-# The secrets directory must be manually created
-#COPY secrets/authorized_keys /home/plainbash/.ssh/authorized_keys
 
 # Use this for debuging
 # It is probably ok if the SSH key is protected by passphrase

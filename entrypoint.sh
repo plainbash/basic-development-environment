@@ -15,5 +15,8 @@ if [ -d $ssh_dir ]; then
 	chmod 600 /home/$user/.ssh/authorized_keys
 fi
 
+# Run ssh-agent
+eval `ssh-agent -s` && ssh-add
+
 # Run ssh server
 /usr/sbin/sshd -D
