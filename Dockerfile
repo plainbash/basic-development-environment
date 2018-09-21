@@ -41,13 +41,21 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/$user/.fzf && 
     runuser -l $user -c "/home/$user/.fzf/install"
 
 RUN mkdir /home/$user/.ssh && \ 
-    printf 'TCPKeepAlive yes\nServerAliveInterval 30' >> /home/$user/.ssh/config && \
-    chown -R $user:$user /home/$user
+    printf 'TCPKeepAlive yes\nServerAliveInterval 30' >> /home/$user/.ssh/config 
 
 # X11
 RUN echo X11Forwarding yes >> /etc/ssh/sshd_config && \
     echo X11UseLocalhost yes >> /etc/sshsshd_config && \ 
     echo AddressFamily inet >> /etc/ssh/sshd_config 
+
+# VIM Customization
+# Global configuration
+#COPY configurations/vimrc.local /etc/vim/vimrc.local
+
+# User-only configuration, packages can be freely installed
+COPY configurations/vimrc.local /home/$user/vimrc
+     
+RUN chown -R $user:$user /home/$user
 
 COPY entrypoint.sh /entrypoint.sh
 
