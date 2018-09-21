@@ -50,11 +50,12 @@ RUN echo X11Forwarding yes >> /etc/ssh/sshd_config && \
 
 # VIM Customization
 # Global configuration
-#COPY configurations/vimrc.local /etc/vim/vimrc.local
+COPY configurations/vimrc.local /etc/vim/vimrc.local
 
 # User-only configuration, packages can be freely installed
-COPY configurations/vimrc.local /home/$user/vimrc
-     
+#COPY configurations/vimrc.local /home/$user/.vimrc
+
+    
 RUN chown -R $user:$user /home/$user
 
 COPY entrypoint.sh /entrypoint.sh

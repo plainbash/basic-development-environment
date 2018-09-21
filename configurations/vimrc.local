@@ -23,7 +23,6 @@ syntax enable
 set background=dark
 colorscheme desert
 
-set no wrap	" Wrap lines
 set showbreak=+++ 	" Wrap-broken line prefix
 set textwidth=100	" Line wrap (number of cols)
 set showmatch	" Highlight matching brace
@@ -42,3 +41,4 @@ set smarttab	" Enable smart-tabs
 set softtabstop=4	" Number of spaces per Tab
  
 set undolevels=1000	" Number of undo levels
+
