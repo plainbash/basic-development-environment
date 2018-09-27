@@ -25,14 +25,14 @@ RUN echo "Europe/Helsinki" > /etc/timezone && \
     update-locale LANG=en_GB.UTF-8
 
 # Install and clean up build packages
-RUN build_dependencies="curl unzip gettext pkg-config libtool-bin automake cmake build-essential" && \
-   apt-get update && apt-get install -y $build_dependencies && \ 
-   git clone https://github.com/neovim/neovim.git && \
-   cd neovim && git checkout tags/v0.3.1 -b 0.3.1 && \
-   make CMAKE_BUILD_TYPE=Release && \
-   make install && \
-   make clean && cd .. && rm -rf neovim && \
-   apt-get remove -y $build_dependences && apt-get -y autoremove && apt-get -y autoclean
+#RUN build_dependencies="curl unzip gettext pkg-config libtool-bin automake cmake build-essential" && \
+#  apt-get update && apt-get install -y $build_dependencies && \ 
+#  git clone https://github.com/neovim/neovim.git && \
+#  cd neovim && git checkout tags/v0.3.1 -b 0.3.1 && \
+#  make CMAKE_BUILD_TYPE=Release && \
+#  make install && \
+#  make clean && cd .. && rm -rf neovim && \
+#  apt-get remove -y $build_dependences && apt-get -y autoremove && apt-get -y autoclean
 
 # fzf finder
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/$user/.fzf && \
@@ -48,13 +48,16 @@ RUN echo X11Forwarding yes >> /etc/ssh/sshd_config && \
     echo X11UseLocalhost yes >> /etc/sshsshd_config && \ 
     echo AddressFamily inet >> /etc/ssh/sshd_config 
 
+# Tmux
+#RUN mkdir /home/$user/.tmux && \
+#    git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm	
+	
 # VIM Customization
 # Global configuration
 #COPY configurations/vimrc.local /etc/vim/vimrc.local
 
 # User-only configuration, packages can be freely installed
 COPY configurations/vimrc.local /home/$user/.vimrc
-
     
 RUN chown -R $user:$user /home/$user
 
