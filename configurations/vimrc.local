@@ -40,8 +40,8 @@ set softtabstop=4		" Number of spaces per Tab
  
 set undolevels=1000		" Number of undo levels
 
-set wildmen
+set wildmenu
 
 " Shady characters, from https://www.youtube.com/watch?v=aHm36-na4-4
 set listchars=tab:>~,nbsp:_,trail:.
-set listu
+set list
