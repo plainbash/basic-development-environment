@@ -1,20 +1,19 @@
 FROM debian:9.5
 
 RUN apt-get update && \
-	apt-get dist-upgrade -y && \
-	apt-get install -y git tmux vim dos2unix ssh openssh-server locales curl
+    apt-get dist-upgrade -y && \
+    apt-get install -y git tmux vim dos2unix ssh openssh-server locales curl
 
 ARG user
 
-RUN useradd -ms /bin/bash -u 1001 $user  
-
-RUN mkdir /var/run/sshd && chmod 0750 /var/run/sshd 
+RUN useradd -ms /bin/bash -u 1001 $user && \
+    mkdir /var/run/sshd && chmod 0750 /var/run/sshd 
 
 COPY configurations/.dircolors /home/$user/.dircolors
 
 COPY configurations/.gitconfig /home/$user/.gitconfig
 
-# Configure timezone and locale
+## Configure timezone and locale
 RUN echo "Europe/Helsinki" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
     sed -i -e 's/# en_GB.UTF-8 UTF-8/en_GB.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -22,7 +21,7 @@ RUN echo "Europe/Helsinki" > /etc/timezone && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_GB.UTF-8
 
-# Install and clean up build packages
+## Install and clean up build packages
 #RUN build_dependencies="curl unzip gettext pkg-config libtool-bin automake cmake build-essential" && \
 #  apt-get update && apt-get install -y $build_dependencies && \ 
 #  git clone https://github.com/neovim/neovim.git && \
@@ -43,25 +42,42 @@ RUN mkdir /home/$user/.ssh && \
 
 ## X11
 RUN echo X11Forwarding yes >> /etc/ssh/sshd_config && \
-    echo X11UseLocalhost yes >> /etc/sshsshd_config && \ 
-    echo AddressFamily inet >> /etc/ssh/sshd_config 
+    echo X11UseLocalhost yes >> /etc/sshsshd_config && \
+    echo AddressFamily inet >> /etc/ssh/sshd_config
 
 ## Tmux
 COPY configurations/.tmux.conf /home/$user/.tmux.conf
 RUN echo "\nalias tmux='tmux -2'\n" >> /home/$user/.bashrc
-#RUN mkdir /home/$user/.tmux && \
-#    git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm	
-	
-# VIM Customization
+
+## VIM Customization
 # Global configuration
 #COPY configurations/vimrc.local /etc/vim/vimrc.local
 
 # User-only configuration, packages can be freely installed
 COPY configurations/vimrc.local /home/$user/.vimrc
 
-RUN apt-get install -y colortest
-    
+## Spacemacs
+# Use develop branch for latest language support
+RUN apt-get install -y emacs25 && \
+    git clone --branch develop https://github.com/syl20bnr/spacemacs /home/$user/.emacs.d
+
+## Java for Spacemacs
+RUN mkdir -p /home/$user/.emacs.d/eclipse.jdt.ls/server
+    curl -o /home/$user/.emacs.d/eclipse.jdt.ls/server/jdt-language-server-latest.tar.gz \
+    http://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz
+
+## Setting correct permission, this should be at bottom.
 RUN chown -R $user:$user /home/$user
+
+## Rust
+# Install Rust, must make sure all installation after this has correct permission for user
+RUN apt-get install -y build-essential && \
+    runuser -l $user -c "curl https://sh.rustup.rs -sSf | sh -s -- -y" && \
+    runuser -l $user -c "rustup toolchain add nightly && cargo +nightly install racer" && \
+    runuser -l $user -c "rustup component add rust-src"
+RUN echo '\nexport RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"\n' \ 
+    >> /home/$user/.profile
+
 
 COPY entrypoint.sh /entrypoint.sh
 
