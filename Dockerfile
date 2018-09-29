@@ -14,8 +14,6 @@ COPY configurations/.dircolors /home/$user/.dircolors
 
 COPY configurations/.gitconfig /home/$user/.gitconfig
 
-COPY configurations/.tmux.conf /home/$user/.tmux.conf
-
 # Configure timezone and locale
 RUN echo "Europe/Helsinki" > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
@@ -43,12 +41,14 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/$user/.fzf && 
 RUN mkdir /home/$user/.ssh && \ 
     printf 'TCPKeepAlive yes\nServerAliveInterval 30' >> /home/$user/.ssh/config 
 
-# X11
+## X11
 RUN echo X11Forwarding yes >> /etc/ssh/sshd_config && \
     echo X11UseLocalhost yes >> /etc/sshsshd_config && \ 
     echo AddressFamily inet >> /etc/ssh/sshd_config 
 
-# Tmux
+## Tmux
+COPY configurations/.tmux.conf /home/$user/.tmux.conf
+RUN echo "\nalias tmux='tmux -2'\n" >> /home/$user/.bashrc
 #RUN mkdir /home/$user/.tmux && \
 #    git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm	
 	
@@ -58,6 +58,8 @@ RUN echo X11Forwarding yes >> /etc/ssh/sshd_config && \
 
 # User-only configuration, packages can be freely installed
 COPY configurations/vimrc.local /home/$user/.vimrc
+
+RUN apt-get install -y colortest
     
 RUN chown -R $user:$user /home/$user
 

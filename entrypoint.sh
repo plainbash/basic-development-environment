@@ -1,7 +1,7 @@
 #!/bin/bash
 
 user=plainbash
-allow_root_access=false
+allow_root_access=true
 
 # Retrieving user id to use it in chown commands instead of the user name
 # to avoid problems on alpine when the user name contains a '.'
