@@ -26,3 +26,31 @@ Run tmux and use `prefix` + I to install plugins
 
 ### SSH
 ssh -p 2233 plainbash@127.0.0.1
+
+### Spacemacs
+```lisp
+;; List of configuration layers to load.
+dotspacemacs-configuration-layers
+'(
+    ;; ----------------------------------------------------------------
+    ;; Example of useful layers you may want to use right away.
+    ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
+    ;; `M-m f e R' (Emacs style) to install them.
+    ;; ----------------------------------------------------------------
+    helm
+    auto-completion
+    ;; better-defaults
+    emacs-lisp
+    ;; git
+    ;; markdown
+    neotree
+    ;; org
+    ;; spell-checking
+    syntax-checking
+    lsp
+    rust
+    (java :variables java-backend 'lsp
+          lsp-java--workspace-folders (list "/path/to/project"
+                                      ))
+)
+```

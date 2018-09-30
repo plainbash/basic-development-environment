@@ -77,7 +77,17 @@ RUN mkdir -p /home/$user/.emacs.d/eclipse.jdt.ls/server && \
 # This setting is important when working in Windows machine
 # This should be set after Emacs due to this issue 
 # https://github.com/syl20bnr/spacemacs/issues/10645
-COPY configurations/.gitconfig /home/$user/.gitconfig
+#COPY configurations/.gitconfig /home/$user/.gitconfig
+
+#COPY jdk-8u181-linux-x64.tar.gz /opt/jdk-linux-x64.tar.gz
+#RUN mkdir /opt/jdk && \
+#   cd /opt && \
+#   tar -C /opt/jdk -xzvf jdk-linux-x64.tar.gz --strip-components=1 && \
+#   cd /opt/jdk && \
+#   cd /usr/local/bin && ln -s /opt/jdk/bin/java . && \
+#   ln -s /opt/jdk/bin/javac . && ln -s /opt/jdk/bin/jar . && \ 
+#   java -version && rm -rf /opt/jdk-linux-x64.tar.gz
+RUN apt-get install -y openjdk-8-jdk
 
 ## Setting correct permission, this should be at bottom.
 RUN chown -R $user:$user /home/$user
@@ -85,12 +95,12 @@ RUN chown -R $user:$user /home/$user
 ## Rust
 # Install Rust, must make sure all installation after this has correct permission for user
 RUN apt-get install -y build-essential curl && \
-   runuser -l $user -c "curl https://sh.rustup.rs -sSf | sh -s -- -y" && \
-   runuser -l $user -c "rustup toolchain add nightly && cargo +nightly install racer" && \
-   runuser -l $user -c "rustup component add rust-src"
+    runuser -l $user -c "curl https://sh.rustup.rs -sSf | sh -s -- -y" && \
+    runuser -l $user -c "rustup toolchain add nightly && cargo +nightly install racer" && \
+    runuser -l $user -c "rustup component add rust-src"
 
 RUN echo '\nexport RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"\n' \ 
-   >> /home/$user/.profile
+    >> /home/$user/.profile
 
 COPY entrypoint.sh /entrypoint.sh
 
