@@ -98,6 +98,13 @@ RUN apt-get install -y build-essential curl && \
     runuser -l $user -c "curl https://sh.rustup.rs -sSf | sh -s -- -y" && \
     runuser -l $user -c "rustup toolchain add nightly && cargo +nightly install racer" && \
     runuser -l $user -c "rustup component add rust-src"
+	
+## Docker
+# Install Docker to run inside the dev environment
+RUN apt-get update && apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common && \
+	curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+	add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
+	apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 
 RUN echo '\nexport RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"\n' \ 
     >> /home/$user/.profile
