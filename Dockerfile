@@ -105,6 +105,11 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates cur
 	curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
 	add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
 	apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
+	
+## AWS CLI
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+	python3 get-pip.py && \
+	pip install awscli
 
 RUN echo '\nexport RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"\n' \ 
     >> /home/$user/.profile
