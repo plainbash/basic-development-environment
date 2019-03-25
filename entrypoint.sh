@@ -29,7 +29,7 @@ if [ "$allow_root_access" = true ]; then
 fi
 
 # Run ssh-agent
-eval `ssh-agent -s` && ssh-add
+# eval `ssh-agent -s` && ssh-add
 
 # Run ssh server
 /usr/sbin/sshd -D

@@ -59,6 +59,17 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git /home/$user/.fzf && 
 # User-only configuration, packages can be freely installed
 COPY configurations/vimrc.local /home/$user/.vimrc
 
+## IntelliJ
+COPY installation/ideaIC-2018.2.4.tar.gz /home/$user/ide/idea.tar.gz
+RUN cd /home/$user/ide && \
+	mkdir /home/$user/ide/idea && \
+        tar -xvzf idea.tar.gz -C /home/$user/ide/idea --strip-components=1 && \
+        rm -rf /home/$user/ide/idea.tar.gz
+    
+RUN chown -R $user:$user /home/$user
+
+RUN apt-get install -y openjdk-8-jre libxext6 libxrender1 libxtst6 libxi6
+
 ## Development package installation
 # WARNING installation order does matter from now
 
@@ -115,5 +126,6 @@ RUN echo '\nexport RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/
     >> /home/$user/.profile
 
 COPY entrypoint.sh /entrypoint.sh
+RUN chmod 750 /entrypoint.sh
 
 CMD ["/entrypoint.sh"]
